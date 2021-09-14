@@ -21,8 +21,8 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<String> read(@PathVariable String id) {
-        return Mono.just(id);
+    public Mono<Reservation> read(@PathVariable String id) {
+        return service.getReservationById(id);
     }
 
     @PutMapping("/{id}")

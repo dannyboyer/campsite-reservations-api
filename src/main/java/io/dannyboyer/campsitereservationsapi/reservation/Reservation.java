@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class Reservation {
-    String id;
+    private String id;
     @NotEmpty
-    String email;
+    private String email;
     @NotEmpty
-    String firstName;
+    private String firstName;
     @NotEmpty
-    String lastName;
-    LocalDateTime arrivalDate;
-    LocalDateTime departureDate;
+    private String lastName;
+    private LocalDateTime arrivalDate;
+    private LocalDateTime departureDate;
 }
