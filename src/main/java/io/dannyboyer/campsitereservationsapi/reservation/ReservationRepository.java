@@ -1,7 +1,7 @@
 package io.dannyboyer.campsitereservationsapi.reservation;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-@Repository
-public interface ReservationRepository {
+
+interface ReservationRepository extends ReactiveCrudRepository<Reservation, Long> {
 }

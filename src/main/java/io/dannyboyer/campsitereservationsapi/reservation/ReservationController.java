@@ -21,19 +21,19 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Reservation> read(@PathVariable String id) {
+    public Mono<Reservation> read(@PathVariable Long id) {
         return service.getReservationById(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<String> update(@PathVariable String id) {
-        return Mono.just(id);
+    public Mono<Reservation> update(@PathVariable Long id, @RequestBody Reservation reservation) {
+        return service.updateReservation(id, reservation);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<String> delete(@PathVariable String id) {
-        return Mono.just(id);
+    public Mono<Void> delete(@PathVariable Long id) {
+        return service.cancelReservation(id);
     }
 }

@@ -6,35 +6,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-
 @Service
 @Slf4j
 public class ReservationService {
+    private final ReservationRepository repository;
+
+    public ReservationService(ReservationRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional
     public Mono<Reservation> makeReservation(Reservation reservation) {
-
         // The campsite can be reserved for max 3 days.
-
         // The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance
-
-        return Mono.just(reservation);
+        return repository.save(reservation);
     }
 
-    public Mono<Reservation> getReservationById(String id) {
-        if ("12".equals(id)) {
-            throw new ReservationNotFoundException(id);
-        }
+    public Mono<Reservation> getReservationById(Long id) {
+        return repository.findById(id);
+    }
 
-        Reservation reservation = Reservation.builder()
-                .id(id)
-                .email("toto@email.com")
-                .firstName("Bob")
-                .lastName("Roby")
-                .arrivalDate(LocalDateTime.now())
-                .departureDate(LocalDateTime.now())
-                .build();
-        return Mono.just(reservation);
+    public Mono<Reservation> updateReservation(Long id, Reservation updatedReservation) {
+        return repository.findById(id)
+                .doOnSuccess(r -> {
+                    r.setArrivalDate(updatedReservation.getArrivalDate());
+                    r.setDepartureDate(updatedReservation.getDepartureDate());
+                    repository.save(r).subscribe();
+                });
+    }
+
+    public Mono<Void> cancelReservation(Long id) {
+        return repository.deleteById(id);
     }
 }

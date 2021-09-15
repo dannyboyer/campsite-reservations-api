@@ -1,7 +1,5 @@
-package io.dannyboyer.campsitereservationsapi.reservation;
+package io.dannyboyer.campsitereservationsapi.problem;
 
-import io.dannyboyer.campsitereservationsapi.problem.ApiError;
-import io.dannyboyer.campsitereservationsapi.problem.ReservationNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
