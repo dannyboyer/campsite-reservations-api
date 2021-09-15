@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class ApiError {
-    private LocalDateTime time;
+    private int errorCode;
     private String message;
+    private LocalDateTime timestamp;
 }

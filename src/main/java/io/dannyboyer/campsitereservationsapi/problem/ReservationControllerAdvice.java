@@ -16,8 +16,9 @@ public class ReservationControllerAdvice {
     public ResponseEntity<ApiError> handleNotFound(ReservationNotFoundException ex) {
         log.error(ex.getMessage());
         ApiError apiError = ApiError.builder()
+                .errorCode(1)
                 .message(ex.getMessage())
-                .time(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }

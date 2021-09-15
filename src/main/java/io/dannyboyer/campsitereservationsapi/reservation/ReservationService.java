@@ -23,16 +23,20 @@ public class ReservationService {
     }
 
     public Mono<Reservation> getReservationById(Long id) {
-        return repository.findById(id);
+        return repository
+                .findById(id)
+                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)));
     }
 
+    @Transactional
     public Mono<Reservation> updateReservation(Long id, Reservation updatedReservation) {
-        return repository.findById(id)
+        return repository
+                .findById(id)
+                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
                 .doOnSuccess(r -> {
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
-                    repository.save(r).subscribe();
-                });
+                }).flatMap(repository::save);
     }
 
     public Mono<Void> cancelReservation(Long id) {
