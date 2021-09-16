@@ -4,9 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,13 +18,18 @@ import java.util.Objects;
 public class Reservation {
     @Id
     private Long id;
-    @NotEmpty
+    @NotEmpty(message = "email must not be empty")
+    @Email(message = "email must be valid")
     private String email;
-    @NotEmpty
+    @NotEmpty(message = "firstName must not be empty")
     private String firstName;
-    @NotEmpty
+    @NotEmpty(message = "lastName must not be empty")
     private String lastName;
+    @Future(message = "arrivalDate must be in the future")
+    @NotNull(message = "arrivalDate must not be null")
     private LocalDateTime arrivalDate;
+    @Future(message = "departureDate must be in the future")
+    @NotNull(message = "departurDate must not be null")
     private LocalDateTime departureDate;
 
     @Override

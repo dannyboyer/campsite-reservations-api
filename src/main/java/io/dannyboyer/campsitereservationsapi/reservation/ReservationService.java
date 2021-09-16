@@ -33,7 +33,10 @@ public class ReservationService {
         return repository
                 .findById(id)
                 .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
-                .doOnSuccess(r -> {
+                .doOnNext(r -> {
+                    r.setEmail(updatedReservation.getEmail());
+                    r.setFirstName(updatedReservation.getFirstName());
+                    r.setLastName(updatedReservation.getLastName());
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
                 }).flatMap(repository::save);
