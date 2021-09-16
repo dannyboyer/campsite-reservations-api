@@ -14,16 +14,9 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class ReservationControllerAdvice {
-
-    @ExceptionHandler(ReservationNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(ReservationNotFoundException ex) {
-        ApiError apiError = new ApiError(1, ex.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(WebExchangeBindException.class)
     public ResponseEntity<ApiError> handleInputValidation(WebExchangeBindException ex) {
-        ApiError apiError = new ApiError(2, "Validation failed for reservation inputs", LocalDateTime.now());
+        ApiError apiError = new ApiError(1, "Validation failed for reservation inputs", LocalDateTime.now());
         apiError.setDebugMessages(ex.getBindingResult()
                 .getAllErrors()
                 .stream()
@@ -33,5 +26,15 @@ public class ReservationControllerAdvice {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ReservationNotFoundException ex) {
+        ApiError apiError = new ApiError(2, ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 
+    @ExceptionHandler(ReservationExceedLimit.class)
+    public ResponseEntity<ApiError> handleExceedLimit(ReservationExceedLimit ex) {
+        ApiError apiError = new ApiError(3, ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
 }

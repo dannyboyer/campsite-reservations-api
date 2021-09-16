@@ -17,7 +17,7 @@ public class ReservationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Reservation> create(@RequestBody @Valid Reservation reservation) {
+    public Mono<Reservation> create(@Valid @RequestBody Reservation reservation) {
         return service.makeReservation(reservation);
     }
 
@@ -29,7 +29,8 @@ public class ReservationController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Reservation> update(@PathVariable Long id, @RequestBody @Valid Reservation reservation) {
+    public Mono<Reservation> update(@PathVariable Long id,
+                                    @Valid @RequestBody Reservation reservation) {
         return service.updateReservation(id, reservation);
     }
 
