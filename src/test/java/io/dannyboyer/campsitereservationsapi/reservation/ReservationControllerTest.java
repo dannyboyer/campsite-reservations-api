@@ -25,16 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
 
-    @MockBean
-    private ReservationRepository repository;
-
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
     void create() {
         var reservation = new Reservation(
-                1L,
+                null,
                 "dan@boy.com",
                 "dan",
                 "boy",
@@ -42,27 +39,13 @@ class ReservationControllerTest {
                 LocalDateTime.now().plusDays(3)
         );
 
-        Mockito.when(repository.save(reservation)).thenReturn(Mono.just(reservation));
-
         webTestClient.post()
                 .uri("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(reservation))
                 .exchange()
                 .expectStatus().isCreated()
-                .expectBody(Reservation.class);
+                .expectBody(Reservation.class)
+                .value(r -> assertEquals(r.getEmail(), reservation.getEmail()));
     }
-
-//    @Test
-//    void read() {
-//
-//    }
-//
-//    @Test
-//    void update() {
-//    }
-//
-//    @Test
-//    void delete() {
-//    }
 }
