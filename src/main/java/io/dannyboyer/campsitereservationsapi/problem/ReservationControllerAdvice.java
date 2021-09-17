@@ -35,6 +35,12 @@ public class ReservationControllerAdvice {
     @ExceptionHandler(ReservationExceedLimit.class)
     public ResponseEntity<ApiError> handleExceedLimit(ReservationExceedLimit ex) {
         ApiError apiError = new ApiError(3, ex.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ReservationTimeConstraint.class)
+    public ResponseEntity<ApiError> handleArrivalAfterDeparture(ReservationTimeConstraint ex) {
+        ApiError apiError = new ApiError(4, ex.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }

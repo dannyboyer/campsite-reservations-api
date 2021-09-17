@@ -4,5 +4,6 @@ email VARCHAR(255),
 first_name VARCHAR(255),
 last_name VARCHAR(255),
 arrival_date TIMESTAMP,
-departure_date TIMESTAMP
+departure_date TIMESTAMP,
+status VARCHAR(100)
 );

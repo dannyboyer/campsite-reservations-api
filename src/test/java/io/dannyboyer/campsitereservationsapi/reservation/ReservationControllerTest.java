@@ -36,7 +36,8 @@ class ReservationControllerTest {
                 "dan",
                 "boy",
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(3)
+                LocalDateTime.now().plusDays(3),
+                ReservationStatus.ACTIVE
         );
 
         webTestClient.post()
@@ -45,6 +46,28 @@ class ReservationControllerTest {
                 .body(BodyInserters.fromValue(reservation))
                 .exchange()
                 .expectStatus().isCreated()
+                .expectBody(Reservation.class)
+                .value(r -> assertEquals(r.getEmail(), reservation.getEmail()));
+    }
+
+    @Test
+    void update() {
+        var reservation = new Reservation(
+                1L,
+                "dan@boy.com",
+                "daniel",
+                "boy",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(3),
+                ReservationStatus.ACTIVE
+        );
+
+        webTestClient.put()
+                .uri("/reservations/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(reservation))
+                .exchange()
+                .expectStatus().isOk()
                 .expectBody(Reservation.class)
                 .value(r -> assertEquals(r.getEmail(), reservation.getEmail()));
     }

@@ -59,15 +59,9 @@ public class ReservationService {
                 .findById(id)
                 .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
                 .doOnNext(r -> {
-                    r.setEmail(updatedReservation.getEmail());
-                    r.setFirstName(updatedReservation.getFirstName());
-                    r.setLastName(updatedReservation.getLastName());
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
+                    r.setStatus(updatedReservation.getStatus());
                 }).flatMap(repository::save);
-    }
-
-    public Mono<Void> cancelReservation(Long id) {
-        return repository.deleteById(id);
     }
 }

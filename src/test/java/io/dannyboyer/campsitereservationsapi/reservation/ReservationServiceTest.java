@@ -31,7 +31,8 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 LocalDateTime.of(2021, 9, 13, 12, 0),
-                LocalDateTime.of(2021, 9, 15, 12, 0)
+                LocalDateTime.of(2021, 9, 15, 12, 0),
+                ReservationStatus.ACTIVE
         );
 
         Mockito.when(repository.save(reservation)).thenReturn(Mono.just(reservation));
@@ -49,7 +50,8 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 LocalDateTime.of(2021, 9, 13, 12, 0),
-                LocalDateTime.of(2021, 9, 16, 12, 0)
+                LocalDateTime.of(2021, 9, 16, 12, 0),
+                ReservationStatus.ACTIVE
         );
 
         StepVerifier
@@ -65,7 +67,8 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 LocalDateTime.of(2021, 9, 15, 12, 0),
-                LocalDateTime.of(2021, 9, 13, 12, 0)
+                LocalDateTime.of(2021, 9, 13, 12, 0),
+                ReservationStatus.ACTIVE
         );
 
         StepVerifier

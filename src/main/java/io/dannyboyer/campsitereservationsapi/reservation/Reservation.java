@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -31,6 +28,9 @@ public class Reservation {
     @Future(message = "departureDate must be in the future")
     @NotNull(message = "departurDate must not be null")
     private LocalDateTime departureDate;
+    @NotNull(message = "status must not be null")
+    //@Pattern(regexp = "ACTIVE|CANCELED", message = "status must be ACTIVE or CANCELED")
+    private ReservationStatus status;
 
     @Override
     public boolean equals(Object o) {
