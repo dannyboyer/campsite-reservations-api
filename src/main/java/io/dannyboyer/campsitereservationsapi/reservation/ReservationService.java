@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -63,5 +64,15 @@ public class ReservationService {
                     r.setDepartureDate(updatedReservation.getDepartureDate());
                     r.setStatus(updatedReservation.getStatus());
                 }).flatMap(repository::save);
+    }
+
+    public Flux<Reservation> findAllInRange(Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
+        if (from.isPresent() && to.isPresent()) {
+            return repository.findAllByTimeRange(from.get(), to.get());
+        } else {
+            var defaultFrom = LocalDateTime.now().plusDays(1);
+            var defaultTo = defaultFrom.plusMonths(1);
+            return repository.findAllByTimeRange(defaultFrom, defaultTo);
+        }
     }
 }
