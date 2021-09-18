@@ -2,6 +2,7 @@ package io.dannyboyer.campsitereservationsapi.reservation;
 
 import io.dannyboyer.campsitereservationsapi.problem.ReservationExceedLimit;
 import io.dannyboyer.campsitereservationsapi.problem.ReservationNotFoundException;
+import io.dannyboyer.campsitereservationsapi.problem.ReservationDatabaseIntegrity;
 import io.dannyboyer.campsitereservationsapi.problem.ReservationTimeConstraint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -52,7 +52,8 @@ public class ReservationService {
 
         return repository
                 .save(toEntity(reservation))
-                .map(this::toDto);
+                .map(this::toDto)
+                .onErrorResume(e -> Mono.error(new ReservationDatabaseIntegrity(e)));
     }
 
     public Mono<Reservation> getReservationById(Long id) {
