@@ -50,13 +50,16 @@ public class ReservationService {
             return Mono.error(new ReservationTimeConstraint("reservation can be minimum 1 day(s) ahead of arrival"));
         }
 
-        return repository.save(reservation);
+        return repository
+                .save(toEntity(reservation))
+                .map(this::toDto);
     }
 
     public Mono<Reservation> getReservationById(Long id) {
         return repository
                 .findById(id)
-                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)));
+                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
+                .map(this::toDto);
     }
 
     @Transactional
@@ -67,17 +70,43 @@ public class ReservationService {
                 .doOnNext(r -> {
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
-                    r.setIsCanceled(updatedReservation.getIsCanceled());
-                }).flatMap(repository::save);
+                })
+                .flatMap(repository::save)
+                .map(this::toDto);
     }
 
     public Flux<Reservation> findAllInRange(Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
         if (from.isPresent() && to.isPresent()) {
-            return repository.findAllByTimeRange(from.get(), to.get());
+            return repository.findAllByTimeRange(from.get(), to.get()).map(this::toDto);
         } else {
             var defaultFrom = LocalDateTime.now().plusDays(1);
             var defaultTo = defaultFrom.plusMonths(1);
-            return repository.findAllByTimeRange(defaultFrom, defaultTo);
+            return repository.findAllByTimeRange(defaultFrom, defaultTo).map(this::toDto);
         }
+    }
+
+    private ReservationEntity toEntity(Reservation reservation) {
+        return ReservationEntity.builder()
+                .email(reservation.getEmail())
+                .firstName(reservation.getFirstName())
+                .lastName(reservation.getLastName())
+                .arrivalDate(reservation.getArrivalDate())
+                .departureDate(reservation.getDepartureDate())
+                .build();
+    }
+
+    private Reservation toDto(ReservationEntity entity) {
+        return Reservation.builder()
+                .id(entity.getId())
+                .email(entity.getEmail())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .arrivalDate(entity.getArrivalDate())
+                .departureDate(entity.getDepartureDate())
+                .build();
+    }
+
+    public Mono<Void> cancelReservation(Long id) {
+        return repository.deleteById(id);
     }
 }

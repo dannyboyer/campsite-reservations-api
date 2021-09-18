@@ -48,4 +48,10 @@ public class ReservationController {
                                     @Valid @RequestBody Reservation reservation) {
         return service.updateReservation(id, reservation);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<Void> delete(@PathVariable Long id) {
+        return service.cancelReservation(id);
+    }
 }

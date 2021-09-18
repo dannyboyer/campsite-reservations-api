@@ -5,5 +5,5 @@ first_name VARCHAR(255),
 last_name VARCHAR(255),
 arrival_date TIMESTAMP,
 departure_date TIMESTAMP,
-is_canceled BOOLEAN
+EXCLUDE USING GIST (tsrange(arrival_date, departure_date) WITH &&)
 );

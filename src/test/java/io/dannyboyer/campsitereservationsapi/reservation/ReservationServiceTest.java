@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -28,16 +29,24 @@ class ReservationServiceTest {
     void makeReservation_success() {
         var arrivalDate = LocalDateTime.now().plusDays(2);
         var departureDate = arrivalDate.plusDays(1);
-        var reservation = new Reservation(null,
+        var reservation = new Reservation(1L,
                 "dan@boy.com",
                 "dan",
                 "boy",
                 arrivalDate,
-                departureDate,
-                false
+                departureDate
         );
 
-        Mockito.when(repository.save(reservation)).thenReturn(Mono.just(reservation));
+        ReservationEntity entity = ReservationEntity.builder()
+                .id(1L)
+                .email(reservation.getEmail())
+                .firstName(reservation.getFirstName())
+                .lastName(reservation.getLastName())
+                .arrivalDate(reservation.getArrivalDate())
+                .departureDate(reservation.getDepartureDate())
+                .build();
+
+        Mockito.when(repository.save(Mockito.any(ReservationEntity.class))).thenReturn(Mono.just(entity));
 
         StepVerifier
                 .create(service.makeReservation(reservation))
@@ -52,8 +61,7 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 LocalDateTime.of(2021, 9, 13, 12, 0),
-                LocalDateTime.of(2021, 9, 16, 12, 0),
-                false
+                LocalDateTime.of(2021, 9, 16, 12, 0)
         );
 
         StepVerifier
@@ -69,8 +77,7 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 LocalDateTime.of(2021, 9, 15, 12, 0),
-                LocalDateTime.of(2021, 9, 13, 12, 0),
-                false
+                LocalDateTime.of(2021, 9, 13, 12, 0)
         );
 
         StepVerifier
@@ -88,8 +95,7 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 from,
-                to,
-                false
+                to
         );
 
         StepVerifier
@@ -107,8 +113,7 @@ class ReservationServiceTest {
                 "dan",
                 "boy",
                 from,
-                to,
-                false
+                to
         );
 
         StepVerifier
