@@ -26,12 +26,14 @@ class ReservationServiceTest {
 
     @Test
     void makeReservation_success() {
+        var arrivalDate = LocalDateTime.now().plusDays(2);
+        var departureDate = arrivalDate.plusDays(1);
         var reservation = new Reservation(null,
                 "dan@boy.com",
                 "dan",
                 "boy",
-                LocalDateTime.of(2021, 9, 13, 12, 0),
-                LocalDateTime.of(2021, 9, 15, 12, 0),
+                arrivalDate,
+                departureDate,
                 false
         );
 
@@ -68,6 +70,44 @@ class ReservationServiceTest {
                 "boy",
                 LocalDateTime.of(2021, 9, 15, 12, 0),
                 LocalDateTime.of(2021, 9, 13, 12, 0),
+                false
+        );
+
+        StepVerifier
+                .create(service.makeReservation(reservation))
+                .expectErrorMatches(ex -> ex instanceof ReservationTimeConstraint)
+                .verify();
+    }
+
+    @Test
+    void makeReservation_moreThanOneMonthBefore() {
+        var from = LocalDateTime.now().plusMonths(1).plusDays(1);
+        var to = from.plusDays(1);
+        var reservation = new Reservation(null,
+                "dan@boy.com",
+                "dan",
+                "boy",
+                from,
+                to,
+                false
+        );
+
+        StepVerifier
+                .create(service.makeReservation(reservation))
+                .expectErrorMatches(ex -> ex instanceof ReservationTimeConstraint)
+                .verify();
+    }
+
+    @Test
+    void makeReservation_lessThanOneDayBefore() {
+        var from = LocalDateTime.now();
+        var to = from.plusDays(1);
+        var reservation = new Reservation(null,
+                "dan@boy.com",
+                "dan",
+                "boy",
+                from,
+                to,
                 false
         );
 

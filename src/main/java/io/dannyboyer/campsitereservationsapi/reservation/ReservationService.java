@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -41,7 +42,13 @@ public class ReservationService {
             return Mono.error(new ReservationExceedLimit());
         }
 
-        // todo: The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance
+        if (reservation.getArrivalDate().isAfter(LocalDateTime.now().plusMonths(1))) {
+            return Mono.error(new ReservationTimeConstraint("arrivalDate can be up to 1 month in advance"));
+        }
+
+        if (reservation.getArrivalDate().isBefore(LocalDateTime.now().plusDays(1))) {
+            return Mono.error(new ReservationTimeConstraint("reservation can be minimum 1 day(s) ahead of arrival"));
+        }
 
         return repository.save(reservation);
     }

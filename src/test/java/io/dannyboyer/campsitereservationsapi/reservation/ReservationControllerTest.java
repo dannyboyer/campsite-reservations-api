@@ -30,13 +30,15 @@ class ReservationControllerTest {
 
     @Test
     void create() {
+        var arrivalDate = LocalDateTime.now().plusDays(2);
+        var departureDate = arrivalDate.plusDays(1);
         var reservation = new Reservation(
                 null,
                 "dan@boy.com",
                 "dan",
                 "boy",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(3),
+                arrivalDate,
+                departureDate,
                 false
         );
 
@@ -52,13 +54,15 @@ class ReservationControllerTest {
 
     @Test
     void update() {
+        var arrivalDate = LocalDateTime.now().plusDays(2);
+        var departureDate = arrivalDate.plusDays(1);
         var reservation = new Reservation(
                 1L,
                 "dan@boy.com",
                 "daniel",
                 "boy",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(3),
+                arrivalDate,
+                departureDate,
                 false
         );
 
