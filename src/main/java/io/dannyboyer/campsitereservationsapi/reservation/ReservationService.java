@@ -41,9 +41,7 @@ public class ReservationService {
             return Mono.error(new ReservationExceedLimit());
         }
 
-        // The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance
-
-        // check that campsite is available for timeframe
+        // todo: The campsite can be reserved minimum 1 day(s) ahead of arrival and up to 1 month in advance
 
         return repository.save(reservation);
     }
@@ -62,7 +60,7 @@ public class ReservationService {
                 .doOnNext(r -> {
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
-                    r.setStatus(updatedReservation.getStatus());
+                    r.setIsCanceled(updatedReservation.getIsCanceled());
                 }).flatMap(repository::save);
     }
 

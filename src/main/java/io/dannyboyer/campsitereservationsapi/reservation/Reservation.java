@@ -29,8 +29,7 @@ public class Reservation {
     @NotNull(message = "departurDate must not be null")
     private LocalDateTime departureDate;
     @NotNull(message = "status must not be null")
-    //@Pattern(regexp = "ACTIVE|CANCELED", message = "status must be ACTIVE or CANCELED")
-    private ReservationStatus status;
+    private Boolean isCanceled;
 
     @Override
     public boolean equals(Object o) {

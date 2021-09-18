@@ -6,8 +6,7 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 
-
 interface ReservationRepository extends ReactiveCrudRepository<Reservation, Long> {
-    @Query("SELECT * FROM reservation WHERE arrival_date >= :from AND departure_date <= :to")
+    @Query("SELECT * FROM reservation WHERE arrival_date >= :from AND departure_date <= :to AND is_canceled = FALSE")
     Flux<Reservation> findAllByTimeRange(LocalDateTime from, LocalDateTime to);
 }

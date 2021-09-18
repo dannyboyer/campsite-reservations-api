@@ -37,7 +37,7 @@ class ReservationControllerTest {
                 "boy",
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(3),
-                ReservationStatus.ACTIVE
+                false
         );
 
         webTestClient.post()
@@ -59,7 +59,7 @@ class ReservationControllerTest {
                 "boy",
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(3),
-                ReservationStatus.ACTIVE
+                false
         );
 
         webTestClient.put()
