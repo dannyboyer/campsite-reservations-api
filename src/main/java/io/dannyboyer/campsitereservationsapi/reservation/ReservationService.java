@@ -59,7 +59,7 @@ public class ReservationService {
     public Mono<Reservation> getReservationById(Long id) {
         return repository
                 .findById(id)
-                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
+                .switchIfEmpty(notFound(id))
                 .map(this::toDto);
     }
 
@@ -67,7 +67,7 @@ public class ReservationService {
     public Mono<Reservation> updateReservation(Long id, Reservation updatedReservation) {
         return repository
                 .findById(id)
-                .switchIfEmpty(Mono.error(new ReservationNotFoundException(id)))
+                .switchIfEmpty(notFound(id))
                 .doOnNext(r -> {
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
@@ -84,6 +84,14 @@ public class ReservationService {
             var defaultTo = defaultFrom.plusMonths(1);
             return repository.findAllByTimeRange(defaultFrom, defaultTo).map(this::toDto);
         }
+    }
+
+    public Mono<Void> cancelReservation(Long id) {
+        return repository.deleteById(id);
+    }
+
+    private Mono<ReservationEntity> notFound(Long id) {
+        return Mono.error(new ReservationNotFoundException(id));
     }
 
     private ReservationEntity toEntity(Reservation reservation) {
@@ -105,9 +113,5 @@ public class ReservationService {
                 .arrivalDate(entity.getArrivalDate())
                 .departureDate(entity.getDepartureDate())
                 .build();
-    }
-
-    public Mono<Void> cancelReservation(Long id) {
-        return repository.deleteById(id);
     }
 }
