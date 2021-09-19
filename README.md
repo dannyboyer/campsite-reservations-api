@@ -40,3 +40,4 @@ OpenAPI definition can be found at [ http://localhost:8080/swagger-ui.html]( htt
   * Switched to a local postgres docker container to use more elaborate type, [Range](https://www.postgresql.org/docs/13/rangetypes.html)
 * Use Database constraint to prevent double booking
   * We can deal with the exception at the application level
+* Since spring-data-r2dbc does not yet permit automatic creation of entity/table, we will use Flyway to handle that automatically
