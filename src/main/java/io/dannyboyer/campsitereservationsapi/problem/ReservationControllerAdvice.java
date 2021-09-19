@@ -36,19 +36,19 @@ public class ReservationControllerAdvice {
     @ExceptionHandler(ReservationExceedLimit.class)
     public ResponseEntity<ApiError> handleExceedLimit(ReservationExceedLimit ex) {
         ApiError apiError = new ApiError(ReservationExceedLimit.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ReservationTimeConstraint.class)
     public ResponseEntity<ApiError> handleArrivalAfterDeparture(ReservationTimeConstraint ex) {
         ApiError apiError = new ApiError(ReservationTimeConstraint.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ReservationDatabaseIntegrity.class)
     public ResponseEntity<ApiError> handleOverlap(ReservationDatabaseIntegrity ex) {
         ApiError apiError = new ApiError(ReservationDatabaseIntegrity.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
         apiError.setDebugMessages(Collections.singletonList(ex.getCause().getMessage()));
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 }
