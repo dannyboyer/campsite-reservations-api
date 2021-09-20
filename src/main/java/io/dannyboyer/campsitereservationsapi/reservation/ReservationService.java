@@ -69,6 +69,7 @@ public class ReservationService {
                 .findById(id)
                 .switchIfEmpty(notFound(id))
                 .doOnNext(r -> {
+                    // took the liberty of restraining what can be updated
                     r.setArrivalDate(updatedReservation.getArrivalDate());
                     r.setDepartureDate(updatedReservation.getDepartureDate());
                 })
@@ -77,13 +78,9 @@ public class ReservationService {
     }
 
     public Flux<Reservation> findAllInRange(Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
-        if (from.isPresent() && to.isPresent()) {
-            return repository.findAllByTimeRange(from.get(), to.get()).map(this::toDto);
-        } else {
-            var defaultFrom = LocalDateTime.now().plusDays(1);
-            var defaultTo = defaultFrom.plusMonths(1);
-            return repository.findAllByTimeRange(defaultFrom, defaultTo).map(this::toDto);
-        }
+        var defaultFrom = LocalDateTime.now().plusDays(1);
+        var defaultTo = defaultFrom.plusMonths(1);
+        return repository.findAllByTimeRange(from.orElseGet(() -> defaultFrom), to.orElseGet(() -> defaultTo)).map(this::toDto);
     }
 
     public Mono<Void> cancelReservation(Long id) {

@@ -13,9 +13,6 @@ REST API service that will manage the campsite reservations
    1. From the code
       1. `mvn clean package`
       2. `java -jar target/campsite-reservations-api-0.0.1-SNAPSHOT.jar`
-   2. From a compiled docker image(closer to production)
-      1. `docker build`
-      2. `docker run`
 
 ## API Documentation
 OpenAPI definition can be found at [ http://localhost:8080/swagger-ui.html]( http://localhost:8080/swagger-ui.html) while running the api
@@ -27,10 +24,18 @@ OpenAPI definition can be found at [ http://localhost:8080/swagger-ui.html]( htt
 * `GET /reservation/{id}`
   * Get a reservation by {id}
 * `GET /reservation?from={LocalDateTime}&to={LocalDateTime}`
-  * Get all reservation in [from, to] range 
+  * Get all reservations in [from, to] range 
     * where {LocalDateTime} formatted like: "2021-09-19T12:00:00"
 * `DELETE /reservation/{id}`
     * Cancel/Delete a reservation by {id}
+
+## Load/Concurrency tests
+* Run with a load test with gatling
+  * `mvn gatling:test`
+* find the results under
+  * `/target/gatling/basicsimulation-{timestamp}/index.html`
+* Basic in place test with
+  * `rampUsers(3000).during(20.seconds)`
 
 ## Architecture Decision Record
 * Use Spring Webflux to keep a lower thread count/resource footprint in case we need to scale
