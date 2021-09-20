@@ -7,5 +7,3 @@ arrival_date TIMESTAMP,
 departure_date TIMESTAMP,
 EXCLUDE USING GIST (tsrange(arrival_date, departure_date) WITH &&)
 );
-
---todo add unique constraint on email to avoid someone hijacking

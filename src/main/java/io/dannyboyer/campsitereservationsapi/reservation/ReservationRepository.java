@@ -7,7 +7,6 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDateTime;
 
 interface ReservationRepository extends ReactiveCrudRepository<ReservationEntity, Long> {
-    //todo : the query is incorect, it does return partial overlap
-    @Query("SELECT * FROM reservation WHERE arrival_date >= :from AND departure_date <= :to")
+    @Query("SELECT * FROM reservation WHERE :from < departure_date AND :to > arrival_date ORDER BY arrival_date ASC")
     Flux<ReservationEntity> findAllByTimeRange(LocalDateTime from, LocalDateTime to);
 }
