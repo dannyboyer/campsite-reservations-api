@@ -7,15 +7,15 @@ REST API service that will manage the campsite reservations
   * Java 11
   * Docker
 
-1. Launch a local postgres instance (todo: try to setup a docker compose)
+1. Launch a local postgres instance
    1. `docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres`
 2. Once the db is up, we can run the application
    1. From the code
       1. `mvn clean package`
-      2. `java -jar target/campsite-reservations-api-0.0.1-SNAPSHOT.jar`
+      2. `java -Xmx256m -jar target/campsite-reservations-api-0.0.1-SNAPSHOT.jar`
 
 ## API Documentation
-OpenAPI definition can be found at [ http://localhost:8080/swagger-ui.html]( http://localhost:8080/swagger-ui.html) while running the api
+OpenAPI definition can be found at [http://localhost:8080/swagger-ui.html]( http://localhost:8080/swagger-ui.html) while running the api
 
 * `POST /reservation`
   * Create a reservation

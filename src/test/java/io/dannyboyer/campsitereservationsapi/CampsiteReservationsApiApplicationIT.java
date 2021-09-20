@@ -27,7 +27,7 @@ class CampsiteReservationsApiApplicationIT {
     private WebTestClient webTestClient;
 
     @Container
-    public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
+    public static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres")
             .withUsername("postgres")
             .withPassword("mysecretpassword");
 
