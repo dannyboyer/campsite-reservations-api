@@ -30,12 +30,13 @@ OpenAPI definition can be found at [http://localhost:8080/swagger-ui.html]( http
     * Cancel/Delete a reservation by {id}
 
 ## Load/Concurrency tests
-* Run with a load test with gatling
-  * `mvn gatling:test`
-* find the results under
-  * `/target/gatling/basicsimulation-{timestamp}/index.html`
-* Basic in place test with
-  * `rampUsers(3000).during(20.seconds)`
+* Run load test with
+  * `mvn gatling:test -Dgatling.simulationClass=campsite.BasicLoadSimulation`
+* Run concurency test with
+  * `mvn gatling:test -Dgatling.simulationClass=campsite.BasicConcurrencySimulation`
+* Find the results under
+  * `/target/gatling/*`
+
 
 ## Architecture Decision Record
 * Use Spring Webflux to keep a lower thread count/resource footprint in case we need to scale

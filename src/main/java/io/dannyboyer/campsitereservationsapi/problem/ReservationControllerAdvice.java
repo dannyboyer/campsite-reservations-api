@@ -24,24 +24,28 @@ public class ReservationControllerAdvice {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList())
         );
+        log.debug(apiError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ReservationNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ReservationNotFoundException ex) {
         ApiError apiError = new ApiError(ReservationNotFoundException.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
+        log.debug(apiError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ReservationExceedLimit.class)
     public ResponseEntity<ApiError> handleExceedLimit(ReservationExceedLimit ex) {
         ApiError apiError = new ApiError(ReservationExceedLimit.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
+        log.debug(apiError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ReservationTimeConstraint.class)
     public ResponseEntity<ApiError> handleArrivalAfterDeparture(ReservationTimeConstraint ex) {
         ApiError apiError = new ApiError(ReservationTimeConstraint.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
+        log.debug(apiError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
@@ -49,6 +53,7 @@ public class ReservationControllerAdvice {
     public ResponseEntity<ApiError> handleOverlap(ReservationDatabaseIntegrity ex) {
         ApiError apiError = new ApiError(ReservationDatabaseIntegrity.API_ERROR_CODE, ex.getMessage(), LocalDateTime.now());
         apiError.setDebugMessages(Collections.singletonList(ex.getCause().getMessage()));
+        log.debug(apiError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 }
