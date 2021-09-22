@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document;
 import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration;
 
@@ -56,7 +59,10 @@ class CampsiteReservationsApiApplicationTest {
     public void setUp(ApplicationContext applicationContext, RestDocumentationContextProvider restDocumentation) {
         this.webTestClient = WebTestClient.bindToApplicationContext(applicationContext)
                 .configureClient()
-                .filter(documentationConfiguration(restDocumentation))
+                .filter(documentationConfiguration(restDocumentation)
+                        .operationPreprocessors()
+                        .withRequestDefaults(prettyPrint())
+                        .withResponseDefaults(prettyPrint()))
                 .build();
     }
 
@@ -81,7 +87,15 @@ class CampsiteReservationsApiApplicationTest {
                 .expectStatus().isCreated()
                 .expectBody(Reservation.class)
                 .value(r -> assertEquals(r.getEmail(), reservation.getEmail()))
-                .consumeWith(document("index"));
+                .consumeWith(document("create",
+                        responseFields(
+                                fieldWithPath("id").description("The user's reservation unique id for confirmation"),
+                                fieldWithPath("email").description("The user's email address"),
+                                fieldWithPath("firstName").description("The user's first name"),
+                                fieldWithPath("lastName").description("The user's last name"),
+                                fieldWithPath("arrivalDate").description("The user's desired arrival date"),
+                                fieldWithPath("departureDate").description("The user's desired departure date")
+                        )));
     }
 
     @Test

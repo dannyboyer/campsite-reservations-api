@@ -1,1 +1,25 @@
-include::{snippets}/index/curl-request.adoc[]
+= Campsite Reservation API
+
+== Book a reservation
+Create a reservation for a given timeframe with user information
+
+=== CURL request
+include::{snippets}/create/curl-request.adoc[]
+=== HTTP request
+include::{snippets}/create/http-request.adoc[]
+=== HTTP response
+include::{snippets}/create/http-response.adoc[]
+=== Request Body
+include::{snippets}/create/request-body.adoc[]
+=== Response Body
+include::{snippets}/create/response-body.adoc[]
+=== Response Fields
+include::{snippets}/create/response-fields.adoc[]
+
+== Get all reservations in date range
+
+== Get a reservation
+
+== Modify a reservation
+
+== Cancel/Delete a reservation
