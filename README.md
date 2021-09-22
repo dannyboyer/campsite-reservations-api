@@ -18,7 +18,11 @@ REST API service that will manage the campsite reservations
 ## API Documentation
 
 OpenAPI definition can be found at [http://localhost:8080/swagger-ui.html]( http://localhost:8080/swagger-ui.html) while
-running the api
+running the api.
+
+Spring REST docs will replace swagger-ui once finished and is available under target/generated-docs
+
+Otherwise here is a summary:
 
 * `POST /reservation`
     * Create a reservation

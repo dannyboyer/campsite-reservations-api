@@ -3,11 +3,17 @@ package io.dannyboyer.campsitereservationsapi;
 import io.dannyboyer.campsitereservationsapi.problem.*;
 import io.dannyboyer.campsitereservationsapi.reservation.Reservation;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -18,11 +24,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document;
+import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration;
 
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CampsiteReservationsApiApplicationIT {
+class CampsiteReservationsApiApplicationTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -41,6 +50,14 @@ class CampsiteReservationsApiApplicationIT {
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
         registry.add("spring.flyway.url", postgreSQLContainer::getJdbcUrl);
+    }
+
+    @BeforeEach
+    public void setUp(ApplicationContext applicationContext, RestDocumentationContextProvider restDocumentation) {
+        this.webTestClient = WebTestClient.bindToApplicationContext(applicationContext)
+                .configureClient()
+                .filter(documentationConfiguration(restDocumentation))
+                .build();
     }
 
     @Test
@@ -63,7 +80,8 @@ class CampsiteReservationsApiApplicationIT {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(Reservation.class)
-                .value(r -> assertEquals(r.getEmail(), reservation.getEmail()));
+                .value(r -> assertEquals(r.getEmail(), reservation.getEmail()))
+                .consumeWith(document("index"));
     }
 
     @Test

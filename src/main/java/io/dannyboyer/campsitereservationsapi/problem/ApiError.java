@@ -1,14 +1,18 @@
 package io.dannyboyer.campsitereservationsapi.problem;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiError {
-    private final int errorCode;
-    private final String message;
+    private int errorCode;
+    private String message;
     private List<String> debugMessages;
-    private final LocalDateTime timestamp;
+    private LocalDateTime timestamp;
 }
